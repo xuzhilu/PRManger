@@ -1,0 +1,99 @@
+# =====================================================
+# PR审查系统配置文件示例
+# =====================================================
+# 
+# 使用说明：
+# 1. 复制本文件为 config.yaml
+# 2. 修改下面的配置项为实际值
+# 3. 将 config.yaml 加入 .gitignore（避免提交敏感信息）
+# 
+
+# ==================== LLM配置 ====================
+llm:
+  # 模型名称（从Ollama拉取的模型）
+  model: "qwen2.5-coder:32b"
+  
+  # Ollama服务地址
+  base_url: "http://localhost:11434"
+  
+  # 温度参数（0-1，越高越随机）
+  temperature: 0.3
+  
+  # 是否显示LLM原始响应（调试用）
+  debug_show_response: false
+  
+  # LLM调用重试配置
+  retry:
+    code_analyzer: 3      # 代码分析智能体最大重试次数
+    git_review: 2         # Git规范检查智能体最大重试次数
+    context_collector: 2  # 上下文收集智能体最大重试次数
+    decision: 2           # 决策智能体最大重试次数
+    
+  # LLM调用超时配置（秒）
+  timeout:
+    code_analyzer: 3600   # 代码分析超时时间（1小时）
+    git_review: 3600      # Git规范检查超时时间（1小时）
+    context_collector: 3600 # 上下文收集超时时间（1小时）
+    decision: 600         # 决策超时时间（10分钟）
+
+# ==================== Git仓库配置 ====================
+git_repo:
+  # 仓库在服务器上的绝对路径
+  # Windows示例: "D:\\Projects\\MyRepo"
+  # Linux/Mac示例: "/home/user/projects/MyRepo"
+  repo_path: "/path/to/your/repo"
+  
+  # 基础分支名称
+  base_branch: "main"
+  
+  # 仓库显示名称（用于飞书消息显示）
+  repo_name: "MyProject"
+
+# ==================== PR审查配置 ====================
+pr_review:
+  # 深度分析配置
+  deep_analysis:
+    max_iterations: 6  # 最大迭代次数（建议4-8次）
+
+# ==================== 飞书机器人配置 ====================
+feishu_bot:
+  # 飞书应用凭证（从飞书开放平台获取：https://open.feishu.cn/）
+  app_id: "cli_xxxxxxxxxxxx"
+  app_secret: "xxxxxxxxxxxxxxxxxxxxxxxx"
+  
+  # 飞书事件订阅配置
+  verification_token: "xxxxxxxxxxxxxxxxxxxxxxxx"
+  encrypt_key: ""  # 可选，如果启用了消息加密则填写
+  
+  # 管理员飞书用户ID列表（open_id格式，如：ou_xxx）
+  # 获取方式：让用户在飞书中给机器人发消息，查看日志中的open_id
+  admins:
+    - "ou_xxxxxxxxxxxxxxxxxxxxxxxx"
+  
+  # 并发控制配置
+  concurrency:
+    # 是否启用并发控制
+    enabled: true
+    
+    # 最大并发处理数（同时处理的PR审查任务数）
+    max_workers: 2
+    
+    # 任务队列最大长度（等待处理的任务数）
+    max_queue_size: 5
+
+# ==================== 配置说明 ====================
+# 
+# 1. 飞书机器人权限需要（在开放平台配置）：
+#    - 接收消息（im:message）
+#    - 读取用户信息（contact:user.id）
+#    - 以应用身份发消息（im:message:send_as_bot）
+# 
+# 2. 仓库路径必须是绝对路径
+# 
+# 3. 管理员ID必须是飞书open_id格式（ou_开头）
+# 
+# 4. retry 和 timeout 配置用于控制 LLM 调用的重试和超时行为
+#    - retry: 失败后重试次数，避免临时网络问题导致失败
+#    - timeout: 单次请求的超时时间（秒），大型PR分析可能需要更长时间
+# 
+# 5. 建议将 config.yaml 加入 .gitignore，避免敏感信息泄露
