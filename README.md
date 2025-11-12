@@ -62,7 +62,8 @@ sudo yum install ripgrep
 - [事件配置](images/事件配置.png)
 - `verification_token,encrypt_key`:[订阅配置](images/订阅配置.png)
 - 创建版本发布应用
-- `admins`:打开API调试台(https://open.feishu.cn/api-explorer/)[管理员id](images/管理员id.png)
+- `admins`:打开API调试台(https://open.feishu.cn/api-explorer/)
+           [管理员id](images/管理员id.png)
 
 ### 启动系统
 
